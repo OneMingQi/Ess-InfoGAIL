@@ -27,16 +27,11 @@ class MultimodalHumanoid(HumanoidEnv):
         self._max_episode_steps = 1000
         self.t = 0
         self.mode_idx = None
-        self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(376,), dtype=np.float64)
+        self.observation_space = spaces.Box(
+            low=-np.inf, high=np.inf, shape=(376,), dtype=np.float64
+        )
 
-    def reset(
-        self,
-        *,
-        seed=None,
-        return_info=False,
-        options=None,
-        mode_idx=0
-    ):
+    def reset(self, *, seed=None, return_info=False, options=None, mode_idx=0):
         super().reset(seed=seed)
 
         self._reset_simulation()
@@ -100,12 +95,14 @@ class MultimodalHumanoid(HumanoidEnv):
         if self.train_expert:
             reward = forward_reward + healthy_reward - ctrl_cost
         else:
-            reward = abs_vel_reward*0.6 + healthy_reward*0.3
+            reward = abs_vel_reward * 0.6 + healthy_reward * 0.3
 
         observation = self._get_obs()
 
-        info = dict(reward_eval=forward_reward, reward_train=abs_vel_reward*0.6 + healthy_reward*0.3)
+        info = dict(
+            reward_eval=forward_reward,
+            reward_train=abs_vel_reward * 0.6 + healthy_reward * 0.3,
+        )
 
         self.renderer.render_step()
         return observation, reward, terminated, truncated, info
-
